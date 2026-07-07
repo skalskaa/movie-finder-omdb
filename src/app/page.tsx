@@ -35,7 +35,7 @@ export default async function Home({ searchParams }: HomePageProps) {
   }
 
   return (
-    <main className="mx-auto flex min-h-screen w-full max-w-5xl flex-col gap-6 px-6 py-12">
+    <main id="main-content" className="mx-auto flex min-h-screen w-full max-w-5xl flex-col gap-6 px-6 py-12">
       <h1 className="text-3xl font-semibold tracking-tight">Movie Finder</h1>
       <p className="max-w-2xl text-zinc-600 dark:text-zinc-300">Find movies by title, filter by year and type.</p>
 
@@ -51,7 +51,11 @@ export default async function Home({ searchParams }: HomePageProps) {
       )}
 
       {searchErrorMessage && (
-        <section className="rounded-xl border border-red-300 bg-red-50 p-4 text-red-700 dark:border-red-800 dark:bg-red-950/30 dark:text-red-300">
+        <section
+          role="alert"
+          aria-live="assertive"
+          className="rounded-xl border border-red-300 bg-red-50 p-4 text-red-700 dark:border-red-800 dark:bg-red-950/30 dark:text-red-300"
+        >
           {searchErrorMessage}
         </section>
       )}

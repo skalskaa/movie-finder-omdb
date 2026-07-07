@@ -34,9 +34,12 @@ export function SearchResults({ results, filters }: SearchResultsProps) {
   const canGoToNextPage = results.page < results.totalPages;
 
   return (
-    <section className="grid gap-4">
+    <section className="grid gap-4" aria-labelledby="search-results-heading">
+      <h2 id="search-results-heading" className="text-lg font-semibold tracking-tight">
+        Search results
+      </h2>
       <div className="flex items-center justify-between">
-        <p className="text-sm text-zinc-600 dark:text-zinc-400">
+        <p aria-live="polite" className="text-sm text-zinc-600 dark:text-zinc-400">
           Found {results.totalResults} results. Page {results.page} of {results.totalPages || 1}.
         </p>
       </div>
@@ -49,7 +52,10 @@ export function SearchResults({ results, filters }: SearchResultsProps) {
           >
             <div className="flex items-start justify-between gap-3">
               <div className="grid gap-1">
-                <Link href={`/movie/${item.imdbID}`} className="text-base font-semibold hover:underline">
+                <Link
+                  href={`/movie/${item.imdbID}`}
+                  className="text-base font-semibold hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-zinc-950"
+                >
                   {item.title}
                 </Link>
                 <div className="text-sm text-zinc-600 dark:text-zinc-400">
@@ -71,31 +77,39 @@ export function SearchResults({ results, filters }: SearchResultsProps) {
         ))}
       </ul>
 
-      <div className="flex items-center gap-2">
-        <Link
-          href={createPageHref(filters, results.page - 1)}
-          aria-disabled={!canGoToPreviousPage}
-          className={`inline-flex h-10 items-center rounded-lg px-3 text-sm font-medium transition ${
-            canGoToPreviousPage
-              ? "border border-zinc-300 hover:bg-zinc-100 dark:border-zinc-700 dark:hover:bg-zinc-800"
-              : "pointer-events-none border border-zinc-200 text-zinc-400 dark:border-zinc-800 dark:text-zinc-600"
-          }`}
-        >
-          Previous
-        </Link>
+      <nav aria-label="Results pagination" className="flex items-center gap-2">
+        {canGoToPreviousPage ? (
+          <Link
+            href={createPageHref(filters, results.page - 1)}
+            className="inline-flex h-10 items-center rounded-lg border border-zinc-300 px-3 text-sm font-medium transition hover:bg-zinc-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2 dark:border-zinc-700 dark:hover:bg-zinc-800 dark:focus-visible:ring-offset-zinc-950"
+          >
+            Previous
+          </Link>
+        ) : (
+          <span
+            aria-disabled="true"
+            className="inline-flex h-10 items-center rounded-lg border border-zinc-200 px-3 text-sm font-medium text-zinc-400 dark:border-zinc-800 dark:text-zinc-600"
+          >
+            Previous
+          </span>
+        )}
 
-        <Link
-          href={createPageHref(filters, results.page + 1)}
-          aria-disabled={!canGoToNextPage}
-          className={`inline-flex h-10 items-center rounded-lg px-3 text-sm font-medium transition ${
-            canGoToNextPage
-              ? "border border-zinc-300 hover:bg-zinc-100 dark:border-zinc-700 dark:hover:bg-zinc-800"
-              : "pointer-events-none border border-zinc-200 text-zinc-400 dark:border-zinc-800 dark:text-zinc-600"
-          }`}
-        >
-          Next
-        </Link>
-      </div>
+        {canGoToNextPage ? (
+          <Link
+            href={createPageHref(filters, results.page + 1)}
+            className="inline-flex h-10 items-center rounded-lg border border-zinc-300 px-3 text-sm font-medium transition hover:bg-zinc-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2 dark:border-zinc-700 dark:hover:bg-zinc-800 dark:focus-visible:ring-offset-zinc-950"
+          >
+            Next
+          </Link>
+        ) : (
+          <span
+            aria-disabled="true"
+            className="inline-flex h-10 items-center rounded-lg border border-zinc-200 px-3 text-sm font-medium text-zinc-400 dark:border-zinc-800 dark:text-zinc-600"
+          >
+            Next
+          </span>
+        )}
+      </nav>
     </section>
   );
 }

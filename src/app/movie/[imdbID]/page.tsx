@@ -52,9 +52,12 @@ interface MovieDetailsViewProps {
 
 function MovieDetailsView({ movie }: MovieDetailsViewProps) {
   return (
-    <main className="mx-auto flex min-h-screen w-full max-w-5xl flex-col gap-6 px-6 py-12">
+    <main id="main-content" className="mx-auto flex min-h-screen w-full max-w-5xl flex-col gap-6 px-6 py-12">
       <div className="flex items-center justify-between">
-        <Link href="/" className="text-sm text-zinc-600 hover:underline dark:text-zinc-300">
+        <Link
+          href="/"
+          className="text-sm text-zinc-600 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2 dark:text-zinc-300 dark:focus-visible:ring-offset-zinc-950"
+        >
           Back to search
         </Link>
       </div>
@@ -147,11 +150,18 @@ interface MovieErrorViewProps {
 
 function MovieErrorView({ message }: MovieErrorViewProps) {
   return (
-    <main className="mx-auto flex min-h-screen w-full max-w-5xl flex-col gap-6 px-6 py-12">
-      <Link href="/" className="text-sm text-zinc-600 hover:underline dark:text-zinc-300">
+    <main id="main-content" className="mx-auto flex min-h-screen w-full max-w-5xl flex-col gap-6 px-6 py-12">
+      <Link
+        href="/"
+        className="text-sm text-zinc-600 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2 dark:text-zinc-300 dark:focus-visible:ring-offset-zinc-950"
+      >
         Back to search
       </Link>
-      <section className="rounded-xl border border-red-300 bg-red-50 p-4 text-red-700 dark:border-red-800 dark:bg-red-950/30 dark:text-red-300">
+      <section
+        role="alert"
+        aria-live="assertive"
+        className="rounded-xl border border-red-300 bg-red-50 p-4 text-red-700 dark:border-red-800 dark:bg-red-950/30 dark:text-red-300"
+      >
         {message}
       </section>
     </main>
