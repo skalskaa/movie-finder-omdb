@@ -91,6 +91,15 @@ function isRating(value: unknown): boolean {
   return isString(value.Source) && isString(value.Value);
 }
 
+function getStringField(
+  payload: Record<string, unknown>,
+  field: string,
+  fallback = "N/A",
+): string {
+  const value = payload[field];
+  return isString(value) ? value : fallback;
+}
+
 function parseErrorResponse(payload: unknown): OmdbErrorDto | null {
   if (!isRecord(payload)) {
     return null;
@@ -104,7 +113,10 @@ function parseErrorResponse(payload: unknown): OmdbErrorDto | null {
     return null;
   }
 
-  return payload as OmdbErrorDto;
+  return {
+    Response: "False",
+    Error: payload.Error,
+  };
 }
 
 function parseSearchResponse(payload: unknown): OmdbSearchResponseDto | null {
@@ -124,7 +136,11 @@ function parseSearchResponse(payload: unknown): OmdbSearchResponseDto | null {
     return null;
   }
 
-  return payload as OmdbSearchResponseDto;
+  return {
+    Response: "True",
+    Search: payload.Search,
+    totalResults: payload.totalResults,
+  };
 }
 
 function parseMovieDetailsResponse(payload: unknown): OmdbMovieDetailsDto | null {
@@ -132,33 +148,7 @@ function parseMovieDetailsResponse(payload: unknown): OmdbMovieDetailsDto | null
     return null;
   }
 
-  const requiredStringFields = [
-    "Title",
-    "Year",
-    "Rated",
-    "Released",
-    "Runtime",
-    "Genre",
-    "Director",
-    "Writer",
-    "Actors",
-    "Plot",
-    "Language",
-    "Country",
-    "Awards",
-    "Poster",
-    "Metascore",
-    "imdbRating",
-    "imdbVotes",
-    "imdbID",
-    "DVD",
-    "BoxOffice",
-    "Production",
-    "Website",
-  ] as const;
-
-  const hasAllStringFields = requiredStringFields.every((field) => isString(payload[field]));
-  if (!hasAllStringFields) {
+  if (!isString(payload.Title) || !isString(payload.Year) || !isString(payload.imdbID)) {
     return null;
   }
 
@@ -166,11 +156,38 @@ function parseMovieDetailsResponse(payload: unknown): OmdbMovieDetailsDto | null
     return null;
   }
 
-  if (!Array.isArray(payload.Ratings) || !payload.Ratings.every(isRating)) {
-    return null;
-  }
+  const ratings =
+    Array.isArray(payload.Ratings) && payload.Ratings.every(isRating)
+      ? payload.Ratings
+      : [];
 
-  return payload as OmdbMovieDetailsDto;
+  return {
+    Response: "True",
+    Title: payload.Title,
+    Year: payload.Year,
+    Rated: getStringField(payload, "Rated"),
+    Released: getStringField(payload, "Released"),
+    Runtime: getStringField(payload, "Runtime"),
+    Genre: getStringField(payload, "Genre"),
+    Director: getStringField(payload, "Director"),
+    Writer: getStringField(payload, "Writer"),
+    Actors: getStringField(payload, "Actors"),
+    Plot: getStringField(payload, "Plot"),
+    Language: getStringField(payload, "Language"),
+    Country: getStringField(payload, "Country"),
+    Awards: getStringField(payload, "Awards"),
+    Poster: getStringField(payload, "Poster"),
+    Ratings: ratings,
+    Metascore: getStringField(payload, "Metascore"),
+    imdbRating: getStringField(payload, "imdbRating"),
+    imdbVotes: getStringField(payload, "imdbVotes"),
+    imdbID: payload.imdbID,
+    Type: payload.Type,
+    DVD: getStringField(payload, "DVD"),
+    BoxOffice: getStringField(payload, "BoxOffice"),
+    Production: getStringField(payload, "Production"),
+    Website: getStringField(payload, "Website"),
+  };
 }
 
 export function createOmdbClient(options: OmdbClientOptions = {}) {
