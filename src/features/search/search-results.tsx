@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { SearchMoviesResult } from "@/lib/omdb";
+import { FavoriteToggleButton } from "@/features/favorites/favorite-toggle-button";
 import type { SearchFilters } from "./search-params";
 import { toSearchParams } from "./search-params";
 
@@ -46,11 +47,25 @@ export function SearchResults({ results, filters }: SearchResultsProps) {
             key={item.imdbID}
             className="grid gap-1 rounded-xl border border-zinc-200 bg-white p-4 dark:border-zinc-800 dark:bg-zinc-950"
           >
-            <Link href={`/movie/${item.imdbID}`} className="text-base font-semibold hover:underline">
-              {item.title}
-            </Link>
-            <div className="text-sm text-zinc-600 dark:text-zinc-400">
-              {item.year} | {item.type}
+            <div className="flex items-start justify-between gap-3">
+              <div className="grid gap-1">
+                <Link href={`/movie/${item.imdbID}`} className="text-base font-semibold hover:underline">
+                  {item.title}
+                </Link>
+                <div className="text-sm text-zinc-600 dark:text-zinc-400">
+                  {item.year} | {item.type}
+                </div>
+              </div>
+
+              <FavoriteToggleButton
+                movie={{
+                  imdbID: item.imdbID,
+                  title: item.title,
+                  year: item.year,
+                  type: item.type,
+                  posterUrl: item.posterUrl,
+                }}
+              />
             </div>
           </li>
         ))}

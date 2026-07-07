@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import { cache } from "react";
+import { FavoriteToggleButton } from "@/features/favorites/favorite-toggle-button";
 import { type MovieDetails, OmdbError, omdbClient } from "@/lib/omdb";
 
 interface MovieDetailsPageProps {
@@ -80,6 +81,17 @@ function MovieDetailsView({ movie }: MovieDetailsViewProps) {
             <p className="text-sm text-zinc-600 dark:text-zinc-400">
               {movie.year} | {movie.type} | IMDb: {movie.imdbRating || "N/A"}
             </p>
+            <div className="pt-2">
+              <FavoriteToggleButton
+                movie={{
+                  imdbID: movie.imdbID,
+                  title: movie.title,
+                  year: movie.year,
+                  type: movie.type,
+                  posterUrl: movie.posterUrl,
+                }}
+              />
+            </div>
           </header>
 
           <p className="text-sm leading-6 text-zinc-700 dark:text-zinc-300">{movie.plot || "No description."}</p>
