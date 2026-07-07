@@ -1,5 +1,6 @@
 import { OmdbError } from "@/lib/omdb/errors";
 import { mapMovieDetails, mapSearchItem } from "@/lib/omdb/mappers";
+import { isRecord, isString } from "@/lib/utils/guards";
 import type {
   MovieDetails,
   OmdbErrorDto,
@@ -61,14 +62,9 @@ function isAbortError(error: unknown): boolean {
   return error instanceof Error && error.name === "AbortError";
 }
 
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === "object" && value !== null;
-}
-
-function isString(value: unknown): value is string {
-  return typeof value === "string";
-}
-
+// OMDb has no schema/OpenAPI, so we hand-check the fields the UI depends on
+// instead of trusting the raw JSON. Kept dependency-free on purpose; if the
+// payload grows, swap this for zod/valibot rather than extending by hand.
 function isSearchItem(value: unknown): boolean {
   if (!isRecord(value)) {
     return false;

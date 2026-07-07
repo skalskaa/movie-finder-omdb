@@ -1,12 +1,11 @@
+import { isRecord } from "@/lib/utils/guards";
 import type { FavoriteMovie } from "./types";
 
 export const FAVORITES_STORAGE_KEY = "movie-finder-omdb:favorites";
 export const FAVORITES_STORAGE_EVENT = "movie-finder-omdb:favorites-changed";
 
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === "object" && value !== null;
-}
-
+// localStorage is user-writable and survives schema changes between releases,
+// so anything read back is treated as untrusted and validated per item.
 function isFavoriteMovie(value: unknown): value is FavoriteMovie {
   if (!isRecord(value)) {
     return false;

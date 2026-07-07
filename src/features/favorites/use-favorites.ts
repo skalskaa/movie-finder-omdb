@@ -71,6 +71,8 @@ function getSnapshot(): FavoriteMovie[] {
   return cachedFavorites;
 }
 
+// useSyncExternalStore (not useState) so every mounted list/detail view and
+// other browser tabs stay in sync from the single localStorage source of truth.
 export function useFavorites(): UseFavoritesResult {
   const favorites = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
 
